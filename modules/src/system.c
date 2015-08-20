@@ -81,11 +81,11 @@ void systemInit(void)
   if(isInit)
     return;
 
-  canStartMutex = xSemaphoreCreateMutex();
-  xSemaphoreTake(canStartMutex, portMAX_DELAY);
+  canStartMutex = xSemaphoreCreateMutex();         //创建了“可以启动”的互斥变量
+  xSemaphoreTake(canStartMutex, portMAX_DELAY);    //“可以启动”互斥变量被占有了
 
-  configblockInit();
-  workerInit();
+  configblockInit();                              //这是配置？？
+  workerInit();                                   //在这个里面创建了一个能够包含5个工作的工作队列，就是包含5个函数指针和参数的结构体 worker_work
   //adcInit();
   ledseqInit();
   pmInit();
@@ -114,7 +114,7 @@ void systemTask(void *arg)
   ledInit();
   ledSet(CHG_LED, 1);
 
-  uartInit();
+  uartInit();      //串口DMA
   //Init the high-levels modules
   systemInit();
 

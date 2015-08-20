@@ -143,7 +143,7 @@ void uartInit(void)
   USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_CTS;
   USART_Init(UART_TYPE, &USART_InitStructure);
 
-  uartDmaInit();
+  uartDmaInit();    //串口发送用的是DMA发送
 
   // TODO: Enable
   // Configure Tx buffer empty interrupt
@@ -153,13 +153,13 @@ void uartInit(void)
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);
 
-  vSemaphoreCreateBinary(waitUntilSendDone);
-  uartDataDelivery = xQueueCreate(40, sizeof(uint8_t));
+  vSemaphoreCreateBinary(waitUntilSendDone);              //创建了等待DMA发送完成的二值信号量
+  uartDataDelivery = xQueueCreate(40, sizeof(uint8_t));   //创建了一个40个字节的数据交付队列
 
-  USART_ITConfig(UART_TYPE, USART_IT_RXNE, ENABLE);
+  USART_ITConfig(UART_TYPE, USART_IT_RXNE, ENABLE);       //串口接收中断使能
 
   //Setting up TXEN pin (NRF flow control)
-  RCC_AHB1PeriphClockCmd(UART_TXEN_PERIF, ENABLE);
+  RCC_AHB1PeriphClockCmd(UART_TXEN_PERIF, ENABLE);        //？？？不明所以啊
 
   bzero(&GPIO_InitStructure, sizeof(GPIO_InitStructure));
   GPIO_InitStructure.GPIO_Pin = UART_TXEN_PIN;
